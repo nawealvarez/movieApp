@@ -1,6 +1,7 @@
 version: "3"
 services:
   backend:
+    container_name: movie_back
     build:
       context: "./server"
       dockerfile: Dockerfile
@@ -11,6 +12,7 @@ services:
     ports:
       - "8000:8000"
   frontend:
+    container_name: movie_front
     build: "./client"
     command: yarn start
     volumes:
