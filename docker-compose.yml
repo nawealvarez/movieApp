@@ -1,0 +1,21 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: "./server"
+      dockerfile: Dockerfile
+    command: npm run start
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    ports:
+      - "8000:8000"
+  frontend:
+    build: "./client"
+    command: yarn start
+    volumes:
+      - ./client:/app
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
