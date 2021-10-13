@@ -11,6 +11,8 @@ services:
       - ./server:/app
     ports:
       - "8000:8000"
+    depends_on:
+      - db
   frontend:
     container_name: movie_front
     build: "./client"
@@ -21,3 +23,12 @@ services:
       - backend
     ports:
       - "3000:3000"
+  db:
+    container_name: movie_db
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment: 
+      - POSTGRES_DB=challenge
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
