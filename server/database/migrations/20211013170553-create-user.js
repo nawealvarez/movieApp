@@ -9,9 +9,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       username: {
+        allowNull: false,
         type: Sequelize.STRING
       },
-      password: {
+      email: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      firebaseId: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      fcmToken: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {

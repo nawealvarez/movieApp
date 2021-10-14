@@ -1,6 +1,8 @@
 import { Container } from '@mui/material';
 import { Switch, BrowserRouter, Route } from "react-router-dom";
 import Login from './Login';
+import Signup from './Signup';
+import Home from './Home';
 
 const Main = () => {
 
@@ -9,12 +11,9 @@ const Main = () => {
     <Container maxWidth="lg">
       <BrowserRouter >
         <Switch>
-          <Route exact path="/login">
-              <Login/>
-          </Route>
-          <Route path="/">
-            <Login/>
-          </Route>
+          <Route exact path="/login" component={Login}/>
+          <Route exact path="/signup" component={Signup}/>
+          <Route exact path="/" component={Home}/>
         </Switch>
       </BrowserRouter>
     </Container>

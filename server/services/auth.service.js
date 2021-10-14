@@ -38,6 +38,10 @@ class AuthService {
         }
     }
 
+    /**
+     * @param {Object} body
+     * @param {string} body.username
+     */
     async signUp(body) {
         const decodedToken = await this.extractUSer(body);
         const newUser = await this.createUser(decodedToken, body);
@@ -65,6 +69,14 @@ class AuthService {
         await user.save();
     }
 
+    /**
+     * 
+     * @param {Object} payload 
+     * @param {string} payload.uid
+     * @param {string} payload.email
+     * @param {Object} body
+     * @param {string} body.username 
+     */
     async createUser(payload, body) {
         const firebaseId = payload.user_id;
         const userCheck = await db.User.findOne({

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -7,8 +7,16 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
+
+const styles = makeStyles({
+  root: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  }})
 
 function Copyright(props) {
   return (
@@ -25,29 +33,52 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignInSide() {
+export default function Login() {
+  const classes = styles();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [disabled, setDisabled] = useState(true);
+
+  const handleOnChageUsername = (e) => {
+    const uName = e.target.value;
+    setUsername(uName);
+  }
+
+  const handleOnChagePassword = (e) => {
+    const uPass = e.target.value;
+    setPassword(uPass);
+
+  }
+
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    const userData = {
-      username: data.get('username'),
-      password: data.get('password'),
-    };
-    console.log(userData);
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData)
-    };
-    const res = await fetch("http://localhost:8000/v1/login", requestOptions)
-    const resJson = await res.json();
-    console.log("resss ", resJson);
+    if (username && username.trim() !== "" && password && password.trim() !== "") {
+      const userData = {
+        username: username,
+        password: password,
+      };
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      };
+      const res = await fetch("http://localhost:8000/auth/login", requestOptions)
+      //const res2 = await axios.post("http://localhost:8000/auth/login", requestOptions)
+      const resJson = await res.json();
+      console.log("resss ", resJson);
+    }
   };
-  React.useEffect(() => {
-    fetch("http://localhost:8000/api")
-    .then((res) => res.json())
-    .then((data) => console.log(data.message));
+  
+  useEffect(() => {
+    if (username && password) {
+      setDisabled(false); 
+    } else {
+      setDisabled(true);
+    }
+  }, [username, password]);
+
+  useEffect(() => {
+    axios.get("http://localhost:8000/")
+    .then(res => console.log(res.data));
   },[]);
 
   return (
@@ -88,6 +119,8 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
+                onChange={handleOnChageUsername}
+                value={username}
                 id="username"
                 label="Username"
                 name="username"
@@ -98,6 +131,8 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
+                onChange={handleOnChagePassword}
+                value={password}
                 name="password"
                 label="Password"
                 type="password"
@@ -109,17 +144,13 @@ export default function SignInSide() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={disabled}
               >
                 Sign In
               </Button>
               <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="#" variant="body2">
+                <Grid item className={classes.root}>
+                  <Link href="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

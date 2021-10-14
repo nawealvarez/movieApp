@@ -14,12 +14,10 @@ app.use(cors());
 admin.initializeApp();
 
 //app.use('/v1', routes);
-app.use(api);
-
-app.get('/welcome', (req, res) => res.status(200).send({
+app.get('/', (req, res) => res.status(200).send({
   message: 'Welcome to the Movie API'
 }));
-  
+app.use(api);
   
 app.listen(8000, () => {
     console.log(`app listening at http://localhost:8000`)
