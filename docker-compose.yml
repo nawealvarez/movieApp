@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 services:
   backend:
     container_name: movie_back
@@ -11,11 +11,19 @@ services:
       - ./server:/app
     ports:
       - "8000:8000"
+    environment:
+      - EXTERNAL_PORT=8000
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+      - PGDATABASE=challenge
+      - PGHOST=db # NAME OF THE SERVICE
     depends_on:
       - db
   frontend:
     container_name: movie_front
-    build: "./client"
+    build: 
+      context: "./client"
+      dockerfile: Dockerfile
     command: yarn start
     volumes:
       - ./client:/app
@@ -24,10 +32,13 @@ services:
     ports:
       - "3000:3000"
   db:
-    container_name: movie_db
+    container_name: db
     image: postgres
+    restart: always
+    ports:
+      - 35432:5432
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - ./postgresdata:/var/lib/postgresql/data
     environment: 
       - POSTGRES_DB=challenge
       - POSTGRES_USER=postgres

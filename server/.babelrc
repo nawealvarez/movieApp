@@ -1,0 +1,4 @@
+{
+  "presets": ["@babel/present-env"],
+  "plugins": [["@babel/transform-runtime"]]
+}
