@@ -1,5 +1,7 @@
 import React from 'react';
-import { Toolbar, Typography, Container, Box, Grid, Hidden, Card, CardContent, CardActions, CardActionArea, CardMedia, Button } from "@mui/material";
+import { Toolbar, Typography, IconButton, Divider, MenuItem, Container, Box, Grid, Hidden, Menu, CardContent, CardActions, CardActionArea, CardMedia, Button, AppBar } from "@mui/material";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LoginRequired } from '../context/AuthContext';
 import { signOut } from "firebase/auth";
 import { auth } from '../config/utils';
@@ -12,119 +14,155 @@ const useStyles = makeStyles((theme) =>
     root: {
         display: 'flex',
     },
+    toolbar: {
+        paddingRight: 24, // keep right padding when drawer closed
+    },
+    toolbarIcon: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        backgroundColor: theme.palette.primary.main,
+        padding: '0 8px',
+        ...theme.mixins.toolbar,
+    },
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    appBarShift: {
+        marginLeft: 240, // // 240 == drawerwidth
+        width: "calc(100% - 240px)", // 240 == drawerwidth
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+    menuButton: {
+        marginRight: 0,
+        [theme.breakpoints.up('sm')]: {
+            display: 'none',
+        },
+    },
+    menuButtonHidden: {
+        display: 'none',
+    },
     title: {
         flexGrow: 1,
     },
-    padding: {
-        paddingRight: 0,
-        paddingLeft: 0
+    createMenu: {},
+    createMenuButtom: {
+        marginTop: theme.spacing(1),
+        marginLeft: theme.spacing(6),
     },
-    mediaDataset: {
-        width: 60,
+    drawerPaper: {
+        position: 'relative',
+        whiteSpace: 'nowrap',
+        width: 240, // 240 == drawerwidth
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
     },
-    mediaMap: {
-        width: 60,
-    }
+    drawerPaperClose: {
+        overflowX: 'hidden',
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        width: 0, //theme.spacing(7),
+        [theme.breakpoints.up('sm')]: {
+            width: 0, // theme.spacing(9),
+        },
+    },
+    appBarSpacer: theme.mixins.toolbar,
+    content: {
+        flexGrow: 1,
+        height: '100vh',
+        overflow: 'auto',
+    },
+    paper: {
+        padding: theme.spacing(2),
+        display: 'flex',
+        overflow: 'auto',
+        flexDirection: 'column',
+    },
+    linkButton: {
+        color: "#ffffff",
+    },
+    logo: {
+        maxWidth: "120px",
+        marginRight: "16px",
+        marginTop: "4px",
+    },
 }),
+
 );
 
 function Home(props) {
-  const { logout } = useAuth();
+    const { logout, user } = useAuth();
     const classes = useStyles();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const openProfile = Boolean(anchorEl);
+
+
     const handleLogOut = async () => {
         await signOut(auth);
         logout();
     };
 
+
+    const handleProfile = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+
+    const handleProfileClose = () => {
+        setAnchorEl(null);
+    };
+
+
     return (
         <LoginRequired>
-            <Container>
-                <Toolbar className={classes.padding}>
+            <AppBar>
+                <Toolbar className={classes.toolbar}>
                     <Typography component="div" variant="h5" color="inherit" noWrap className={classes.title}>
-                        Home
+                        Admios Movie App
                     </Typography>
+                
+                <Box>
+                        <Button className={classes.linkButton} onClick={handleProfile}>{user ? user.email : null}</Button>
+                        <IconButton
+                            aria-label={"account of current user"}
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            onClick={handleProfile}
+                            color="inherit"
+                        >
+                            <AccountCircle/>
+                        </IconButton>
+                        <Menu
+                            id="menu-appbar"
+                            anchorEl={anchorEl}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={openProfile}
+                            onClose={handleProfileClose}
+                        >
+                            <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
+                        </Menu>
+                    </Box>
                 </Toolbar>
-                <Grid container spacing={2} direction="row-reverse">
-                    <Hidden smDown>
-                        <Grid item md={4}>
-                            <Typography component="h1" variant="h6" color="inherit" noWrap>
-                                Tools
-                            </Typography>
-                            <Box>
-                                <Button color="secondary" >Update user data</Button>
-                            </Box>
-                        </Grid>
-                    </Hidden>
-
-                    <Grid item xs={12} md={8}>
-                        <Grid container spacing={2} >
-                            <Grid item xs={12} md={6}>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                onClick={handleLogOut}
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                LogOut
-                            </Button>
-
-                                <Card >
-                                    <CardActionArea>
-                                        <CardMedia
-                                            className={classes.mediaMap}
-                                            component="img"
-                                            alt="Create Map"
-                                            title="Create Map"
-                                        />
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h5" component="h2">
-                                                Empieza creando un mapa
-                                            </Typography>
-                                            <Typography variant="body2" color="textSecondary" component="p">
-                                                Con akopica puedes crear mapas con distintos tipos de capas de información almacenadas en datasets.
-                                                <br></br>&nbsp;
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                    <CardActions>
-                                        <Button size="small" color="primary">
-                                            Crear un mapa
-                                        </Button>
-                                    </CardActions>
-                                </Card>
-                            </Grid>
-
-                            <Grid item xs={12} md={6}>
-
-                                <Card>
-                                    <CardActionArea>
-                                        <CardMedia
-                                            className={classes.mediaDataset}
-                                            component="img"
-                                            alt="Create dataset"
-                                            title="Create dataset"
-                                        />
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h5" component="h2">
-                                                Sube un dataset
-                                            </Typography>
-                                            <Typography variant="body2" color="textSecondary" component="p">
-                                                Los dataset son los datos que se visualizan en los mapas. Puedes subir datos de figuras, imágenes, mosaicos, etc.
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                    <CardActions>
-                                        <Button size="small" color="primary">
-                                            Subir datos
-                                        </Button>
-                                    </CardActions>
-                                </Card>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Container>
+            </AppBar>
         </LoginRequired>
     );
 }

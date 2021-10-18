@@ -99,7 +99,7 @@ export default function Signup() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -177,6 +177,6 @@ export default function Signup() {
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
+    </>
   );
 }

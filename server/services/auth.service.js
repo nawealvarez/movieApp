@@ -70,12 +70,7 @@ class AuthService {
         return await this.tokenService.generate(user);
     
     }
-
-    async logOut(user) {
-        user.fcmToken = null;
-        await user.save();
-    }
-
+    
     /**
      * 
      * @param {Object} payload 

@@ -92,7 +92,7 @@ export default function Login() {
         // The signed-in user info.
         const user = res.user;
         const fToken = await user.getIdToken();   
-        const sign = await loginService({credential: credential, user: res.user, email: email, fToken: fToken});
+        const sign = await loginService({credential: credential, user: user, email: user.email, fToken: fToken});
     
         if (sign) {
           login(sign);
@@ -115,7 +115,7 @@ export default function Login() {
   }, [email, password]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -211,6 +211,6 @@ export default function Login() {
           </Box>
         </Grid>
       </Grid>
-    </ThemeProvider>
+    </>
   );
 }

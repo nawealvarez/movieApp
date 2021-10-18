@@ -32,7 +32,7 @@ export const AuthContextWrapper = (props) => {
     }
 
     const logout = () => {
-        setUser({});
+        setUser(null);
         setIsLogged(false);
     }
 
