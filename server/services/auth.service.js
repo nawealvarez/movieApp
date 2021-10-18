@@ -7,13 +7,13 @@ const admin = require('firebase-admin');
 
 class TokenService {
     async generate(user) {
-        const expire = new Date();
-        expire.setHours(expires.getHours() + 12);
+        const expires = new Date();
+        expires.setHours(expires.getHours() + 12);
 
         const payload = {
             sub: user.id,
             username: user.username,
-            exp: expire.getTime()
+            exp: expires.getTime()
         };
 
         const token = jwt.sign(payload, config.jwtSecret);
@@ -46,6 +46,9 @@ class AuthService {
         const decodedToken = await this.extractUSer(body);
         const newUser = await this.createUser(decodedToken, body);
         const token = await this.tokenService.generate(newUser);
+
+        console.log("newUser ", newUser, "token", token, "decodedToken", decodedToken);
+
         return { token: token};
     }
 
@@ -80,15 +83,14 @@ class AuthService {
     async createUser(payload, body) {
         const firebaseId = payload.user_id;
         const userCheck = await db.User.findOne({
-            firebaseId: firebaseId
+            where: {firebaseId: firebaseId},
         });
         if (userCheck) {
             throw new ServiceError(400, "User already exists");
         }
-        const username = body.username;
         const fcmToken = body.fcmToken;
         const email = body.email;
-        const user = await db.User.create({firebaseId: firebaseId, username: username, email: email, fcmToken: fcmToken});
+        const user = await db.User.create({'firebaseId': firebaseId, 'email': email, 'fcmToken': fcmToken});
         return user;
     }
 }

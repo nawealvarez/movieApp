@@ -43,3 +43,6 @@ services:
       - POSTGRES_DB=challenge
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+
+volumes:
+  db:

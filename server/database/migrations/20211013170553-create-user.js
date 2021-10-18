@@ -8,10 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
       email: {
         allowNull: false,
         type: Sequelize.STRING
@@ -21,7 +17,6 @@ module.exports = {
         type: Sequelize.STRING
       },
       fcmToken: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {

@@ -10,7 +10,12 @@ import Grid from '@mui/material/Grid';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
+import {apiConfig } from '../config/utils';
+import { authGoogle, provider } from '../services/Firebase.service';
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {ReactComponent as Logo} from '../assets/googleLogo.svg';
+import { auth } from '../config/utils';
+import { useHistory } from 'react-router';
 
 const styles = makeStyles({
   root: {
@@ -34,14 +39,15 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
+  const history = useHistory();
   const classes = styles();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(true);
 
-  const handleOnChageUsername = (e) => {
-    const uName = e.target.value;
-    setUsername(uName);
+  const handleOnChageEmail = (e) => {
+    const uEmail = e.target.value;
+    setEmail(uEmail);
   }
 
   const handleOnChagePassword = (e) => {
@@ -50,36 +56,41 @@ export default function Login() {
 
   }
 
-  const handleSubmit = async (event) => {
-    if (username && username.trim() !== "" && password && password.trim() !== "") {
-      const userData = {
-        username: username,
-        password: password,
-      };
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
-      };
-      const res = await fetch("http://localhost:8000/auth/login", requestOptions)
-      //const res2 = await axios.post("http://localhost:8000/auth/login", requestOptions)
-      const resJson = await res.json();
-      console.log("resss ", resJson);
-    }
+  const handleSubmit = async () => {
+    try {
+      history.push('/');
+      const res = await auth.signInWithEmailAndPassword(email, password);
+      if (res) {
+        console.log('Your account has been created successfully!', res);
+      }
+    } catch (err) {
+      console.log(err);
+    }    
   };
+
+  const handleLoginGoogle = async () => {
+    try {
+      const res = await signInWithPopup(authGoogle, provider)
+      if (res) {
+        const credential = GoogleAuthProvider.credentialFromResult(res);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = res.user;
+        console.log('Your account has been created successfully!', res, user);
+        history.push('/');
+      }
+    } catch (err) {
+      alert(err);
+    }
+  }
   
   useEffect(() => {
-    if (username && password) {
+    if (email && password) {
       setDisabled(false); 
     } else {
       setDisabled(true);
     }
-  }, [username, password]);
-
-  useEffect(() => {
-    axios.get("http://localhost:8000/")
-    .then(res => console.log(res.data));
-  },[]);
+  }, [email, password]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -114,13 +125,13 @@ export default function Login() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                onChange={handleOnChageUsername}
-                value={username}
+                onChange={handleOnChageEmail}
+                value={email}
                 id="username"
                 label="Username"
                 name="username"
@@ -142,13 +153,23 @@ export default function Login() {
               <Button
                 type="submit"
                 fullWidth
+                onClick={handleSubmit}
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 disabled={disabled}
               >
                 Sign In
               </Button>
-              <Grid container>
+              <Button
+                type="submit"
+                fullWidth
+                variant="raised"
+                onClick={handleLoginGoogle}
+              >
+                <Logo className='logo' />
+                Sign In with Google
+              </Button>
+              <Grid container justifyContent="center" sx={{ mt: 3, mb: 2 }}>
                 <Grid item className={classes.root}>
                   <Link href="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}

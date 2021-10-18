@@ -1,9 +1,9 @@
 import Main from './components/Main';
 
 import { AuthContextWrapper } from './context/AuthContext';
-import {config} from './utils';
+import {apiConfig} from './config/utils';
 function App() {
-  config();
+  apiConfig();
   return (
     <AuthContextWrapper >
       <Main />

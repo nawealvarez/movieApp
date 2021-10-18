@@ -6,14 +6,13 @@ import Home from './Home';
 
 const Main = () => {
 
-  // TODO: Replace for an api call
   return (
     <Container maxWidth="lg">
       <BrowserRouter >
         <Switch>
-          <Route exact path="/login" component={Login}/>
-          <Route exact path="/signup" component={Signup}/>
-          <Route exact path="/" component={Home}/>
+          <Route path="/login" component={Login}/>
+          <Route path="/signup" component={Signup}/>
+          <Route path="/" component={Home}/>
         </Switch>
       </BrowserRouter>
     </Container>

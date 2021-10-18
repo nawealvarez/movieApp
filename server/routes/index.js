@@ -2,15 +2,11 @@ const express = require('express');
 //const router = express.Router();
 const passport = require('passport');
 const auth = require('./auth');
-require('../passport');
 
 const UserController = require('../controllers/user.controller');
 const AuthController = require('../controllers/auth.controller');
-
-const api = () => {
-  const api = express.Router();
-  api.use('/auth', auth);
-}
+const api = express.Router();
+api.use('/auth', auth);
 
 
 /* eslint-disable */
