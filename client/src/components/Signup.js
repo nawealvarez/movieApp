@@ -89,7 +89,6 @@ export default function Signup() {
           login(sign);
           history.push('/');
         }
-        console.log('Your account has been created successfully!', sign);
       }
     } catch (err) {
       const errjson = err;

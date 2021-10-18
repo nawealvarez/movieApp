@@ -85,7 +85,6 @@ export default function Login() {
   const handleLoginGoogle = async () => {
     try {
       setOnLoad(true);
-      console.log('Your account has been created successfully!');
       const res = await signInWithPopup(authGoogle, provider)
       if (res) {
         const credential = GoogleAuthProvider.credentialFromResult(res);

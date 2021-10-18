@@ -15,7 +15,9 @@ export const login = async (payload) => {
     try{
         const email = payload.email;
         const { data } = await apiConfig.post('/api/auth/login', {
-            token: payload.fToken
+            token: payload.fToken,
+            credential: payload.credential,
+            email: email
         });
         const { token } = data;
         const interceptorId = setClientToken(token);

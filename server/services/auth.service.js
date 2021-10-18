@@ -47,8 +47,6 @@ class AuthService {
         const newUser = await this.createUser(decodedToken, body);
         const token = await this.tokenService.generate(newUser);
 
-        console.log("newUser ", newUser, "token", token, "decodedToken", decodedToken);
-
         return { token: token};
     }
 
@@ -58,10 +56,19 @@ class AuthService {
             where: {firebaseId: decodedToken.user_id},
         });
         
+        if (body.credential !== null && !user) {
+            const newUser = await this.createUser(decodedToken, body);
+            const token = await this.tokenService.generate(newUser);
+
+            return { token: token};
+
+        }
+
         if (!user) {
             throw new ServiceError(400, {msg: "User Not Initialized"});
         }
         return await this.tokenService.generate(user);
+    
     }
 
     async logOut(user) {
