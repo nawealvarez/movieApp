@@ -1,7 +1,6 @@
 import React from 'react';
-import { Toolbar, Typography, IconButton, Divider, MenuItem, Container, Box, Grid, Hidden, Menu, CardContent, CardActions, CardActionArea, CardMedia, Button, AppBar } from "@mui/material";
+import { Toolbar, Typography, IconButton, MenuItem, Box, Menu, Button, AppBar } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LoginRequired } from '../context/AuthContext';
 import { signOut } from "firebase/auth";
 import { auth } from '../config/utils';
@@ -97,6 +96,7 @@ const useStyles = makeStyles((theme) =>
         marginRight: "16px",
         marginTop: "4px",
     },
+
 }),
 
 );
@@ -163,6 +163,10 @@ function Home(props) {
                     </Box>
                 </Toolbar>
             </AppBar>
+            <main className={classes.content}>
+                <div className={classes.appBarSpacer}/>
+                {props.children}
+            </main>
         </LoginRequired>
     );
 }
