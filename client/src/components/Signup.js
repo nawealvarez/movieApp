@@ -11,7 +11,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {ReactComponent as Logo} from '../assets/googleLogo.svg';
 import { auth } from '../config/utils';
 import { useAuth } from '../context/AuthContext';
@@ -19,8 +18,6 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { authGoogle, provider } from '../services/Firebase.service';
 import { signup } from '../services/Auth.service';
 import { useHistory } from 'react-router';
-
-const theme = createTheme();
 
 export default function Signup() {
   const { login } = useAuth();

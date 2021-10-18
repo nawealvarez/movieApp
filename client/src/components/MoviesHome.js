@@ -1,7 +1,9 @@
 import React from "react";
 import {Typography, Grid, Button} from "@mui/material";
+import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
 import Home from './Home';
+import Orders from './Orders';
 
 const useStyles = makeStyles(theme =>
 ({
@@ -38,7 +40,7 @@ const useStyles = makeStyles(theme =>
 }));
 
 
-function Movies () {
+function MoviesHome () {
     const classes = useStyles();
     return (
         <Home>
@@ -53,24 +55,29 @@ function Movies () {
                     >
                         <Grid item xs={12}>
                             <div className={classes.topBar}>
-                            <div className={classes.block}>
-                                <Typography variant="h6" gutterBottom>
-                                    Welcome!
-                                </Typography>
-                                <Typography variant="body1">
-                                    Add new and see existing movies
-                                </Typography>
+                                <div className={classes.block}>
+                                    <Typography variant="h6" gutterBottom>
+                                        Welcome!
+                                    </Typography>
+                                    <Typography variant="body1">
+                                        Add new and see existing movies
+                                    </Typography>
+                                </div>
+                                <div>
+                                    <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    className={classes.outlinedButtom}
+                                    >
+                                    Add New Movie
+                                    </Button>
+                                </div>
                             </div>
-                            <div>
-                                <Button
-                                variant="contained"
-                                color="secondary"
-                                className={classes.outlinedButtom}
-                                >
-                                Add New Movie
-                                </Button>
-                            </div>
-                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                                <Orders />
+                            </Paper>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -79,4 +86,4 @@ function Movies () {
     );
 }
 
-export default Movies;
+export default MoviesHome;

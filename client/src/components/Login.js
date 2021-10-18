@@ -11,7 +11,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuth } from '../context/AuthContext';
 import { login as loginService} from '../services/Auth.service';
 import { authGoogle, provider } from '../services/Firebase.service';
@@ -38,8 +37,6 @@ function Copyright(props) {
     </Typography>
   );
 }
-
-const theme = createTheme();
 
 export default function Login() {
   const { login } = useAuth();
@@ -124,7 +121,7 @@ export default function Login() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(/img/admios.jpeg)',
+            backgroundImage: 'url(/img/movie.jpeg)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
