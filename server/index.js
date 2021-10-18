@@ -3,7 +3,6 @@ const cors = require('cors');
 const passport = require('passport');
 const passportRoutes = require('./routes/passport');
 const {api} = require('./routes/index');
-const auth = require('./routes/auth');
 const admin = require('firebase-admin');
 const app = express();
 

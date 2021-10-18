@@ -6,12 +6,15 @@ import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import Backdrop from '@mui/material/Backdrop';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import CircularProgress from '@mui/material/CircularProgress';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {ReactComponent as Logo} from '../assets/googleLogo.svg';
-import { auth, apiConfig, fcm } from '../config/utils';
+import { auth } from '../config/utils';
+import { useAuth } from '../context/AuthContext';
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { authGoogle, provider } from '../services/Firebase.service';
 import { signup } from '../services/Auth.service';
@@ -20,10 +23,11 @@ import { useHistory } from 'react-router';
 const theme = createTheme();
 
 export default function Signup() {
-
+  const { login } = useAuth();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [disabled, setDisabled] = useState(true);
+  const [onLoad, setOnLoad] = useState(false);
   const history = useHistory();
 
 
@@ -51,22 +55,28 @@ export default function Signup() {
 
   const handleSubmit = async () => {
     try {
+      setOnLoad(true);
       const res = await auth.createUserWithEmailAndPassword(email, password);
       if (res) {
-        const fToken = await res.user.getIdToken();
-        
-        //console.log(fToken);
+        const fToken = await res.user.getIdToken();        
         const sign = await signup({credential: null, user: res.user, email: email, fToken: fToken});
-        history.push('/login');
+ 
+        if (sign) {
+          login(sign);
+          history.push('/');
+        }
         console.log('Your account has been created successfully!', sign);
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setOnLoad(false);
     }
   };
 
   const handleLoginGoogle = async () => {
     try {
+      setOnLoad(true);
       const res = await signInWithPopup(authGoogle, provider)
       if (res) {
         const credential = GoogleAuthProvider.credentialFromResult(res);
@@ -74,13 +84,18 @@ export default function Signup() {
         // The signed-in user info.
         const user = res.user;
         const fToken = await user.getIdToken();
-        //console.log(fToken);
         const sign = await signup({credential: credential, user: user, email: user.email, fToken: fToken});
-        history.push('/');
+        if (sign) {
+          login(sign);
+          history.push('/');
+        }
         console.log('Your account has been created successfully!', sign);
       }
     } catch (err) {
-      alert(err);
+      const errjson = err;
+      console.log(errjson);
+    } finally {
+      setOnLoad(false);
     }
   }
 
@@ -102,7 +117,7 @@ export default function Signup() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 3 }}>
+          <Box sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -131,7 +146,7 @@ export default function Signup() {
             <Button
               onClick={handleSubmit}
               fullWidth
-              disabled={disabled}
+              disabled={disabled || onLoad}
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
@@ -141,10 +156,18 @@ export default function Signup() {
               fullWidth
               onClick={handleLoginGoogle}
               variant="raised"
-            >
+              >
               <Logo className='logo' />
               Sign Up With Google
             </Button>
+            {onLoad ? 
+              <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={onLoad}
+              >
+                <CircularProgress color="inherit" />
+              </Backdrop> : 
+              null }
             <Grid container justifyContent="center" sx={{ mt: 3, mb: 2 }}>
               <Grid item>
                 <Link href="/login" variant="body2">

@@ -5,10 +5,6 @@ export const apiConfig = axios.create({
         baseURL: `http://localhost:8000`
 });
 
-export const fcm = {
-    token: null,
-};
-
 export const setClientToken = token => {
     return apiConfig.interceptors.request.use(function (config) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -25,6 +21,6 @@ const firebaseConfig = {
     appId: "1:925536991387:web:ce5026bd017031e4f6ee3e"
 }
 
-firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
 
-export const auth = firebase.auth();
+export const auth = app.auth();

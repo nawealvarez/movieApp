@@ -1,6 +1,9 @@
 import React from 'react';
-import { Toolbar, Typography, Button, Container, Box, Grid, Hidden, Card, CardContent, CardActions, CardActionArea, CardMedia } from "@mui/material";
+import { Toolbar, Typography, Container, Box, Grid, Hidden, Card, CardContent, CardActions, CardActionArea, CardMedia, Button } from "@mui/material";
 import { LoginRequired } from '../context/AuthContext';
+import { signOut } from "firebase/auth";
+import { auth } from '../config/utils';
+import { useAuth } from '../context/AuthContext';
 import { makeStyles } from '@mui/styles';
 
 
@@ -26,7 +29,12 @@ const useStyles = makeStyles((theme) =>
 );
 
 function Home(props) {
+  const { logout } = useAuth();
     const classes = useStyles();
+    const handleLogOut = async () => {
+        await signOut(auth);
+        logout();
+    };
 
     return (
         <LoginRequired>
@@ -51,6 +59,15 @@ function Home(props) {
                     <Grid item xs={12} md={8}>
                         <Grid container spacing={2} >
                             <Grid item xs={12} md={6}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                onClick={handleLogOut}
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                LogOut
+                            </Button>
 
                                 <Card >
                                     <CardActionArea>

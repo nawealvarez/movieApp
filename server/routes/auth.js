@@ -1,6 +1,6 @@
 const express = require('express');
 const { AuthService } = require('../services/auth.service');
-const { ServiceError } = require('../util/index');
+var ServiceError = require('../util/index').ServiceError;
 const passport = require('passport');
 
 
@@ -24,7 +24,7 @@ auth.post('/signup', async (req, res, next) => {
 auth.post('/login', async (req, res, next) => {
     try {
         return res.status(201).json({
-            token: await authService.login(req.body)
+            token: await authService.logIn(req.body)
         });
     } catch (err) {
         if (err instanceof ServiceError) {

@@ -7,10 +7,13 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {apiConfig } from '../config/utils';
+import { useAuth } from '../context/AuthContext';
+import { login as loginService} from '../services/Auth.service';
 import { authGoogle, provider } from '../services/Firebase.service';
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {ReactComponent as Logo} from '../assets/googleLogo.svg';
@@ -39,11 +42,13 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
+  const { login } = useAuth();
   const history = useHistory();
   const classes = styles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(true);
+  const [onLoad, setOnLoad] = useState(false);
 
   const handleOnChageEmail = (e) => {
     const uEmail = e.target.value;
@@ -58,29 +63,47 @@ export default function Login() {
 
   const handleSubmit = async () => {
     try {
-      history.push('/');
+      setOnLoad(true);
       const res = await auth.signInWithEmailAndPassword(email, password);
       if (res) {
+        const fToken = await res.user.getIdToken();        
+        const sign = await loginService({credential: null, user: res.user, email: email, fToken: fToken});
+        
+        if (sign) {
+          login(sign);
+          history.push('/');
+        }
         console.log('Your account has been created successfully!', res);
       }
     } catch (err) {
       console.log(err);
-    }    
+    } finally {
+      setOnLoad(false);
+    }
   };
 
   const handleLoginGoogle = async () => {
     try {
+      setOnLoad(true);
+      console.log('Your account has been created successfully!');
       const res = await signInWithPopup(authGoogle, provider)
       if (res) {
         const credential = GoogleAuthProvider.credentialFromResult(res);
-        const token = credential.accessToken;
+        //const token = credential.accessToken;
         // The signed-in user info.
         const user = res.user;
-        console.log('Your account has been created successfully!', res, user);
-        history.push('/');
+        const fToken = await user.getIdToken();   
+        const sign = await loginService({credential: credential, user: res.user, email: email, fToken: fToken});
+    
+        if (sign) {
+          login(sign);
+          history.push('/');
+        }
       }
     } catch (err) {
-      alert(err);
+      console.log(err);
+    } finally {
+      setOnLoad(false);
     }
   }
   
@@ -125,7 +148,7 @@ export default function Login() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate sx={{ mt: 1 }}>
+            <Box sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -169,6 +192,14 @@ export default function Login() {
                 <Logo className='logo' />
                 Sign In with Google
               </Button>
+              {onLoad ? 
+              <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={onLoad}
+              >
+                <CircularProgress color="inherit" />
+              </Backdrop> : 
+              null }
               <Grid container justifyContent="center" sx={{ mt: 3, mb: 2 }}>
                 <Grid item className={classes.root}>
                   <Link href="/signup" variant="body2">

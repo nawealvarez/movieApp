@@ -3,7 +3,8 @@ import { Redirect } from "react-router";
 
 export const initialAuth = {
     isLogged: false,
-    login: () => {}
+    login: (u) => {},
+    logout: () => {}
 };
 
 export const AuthContext = React.createContext(initialAuth);
@@ -30,8 +31,13 @@ export const AuthContextWrapper = (props) => {
         setIsLogged(true);
     }
 
+    const logout = () => {
+        setUser({});
+        setIsLogged(false);
+    }
+
     return (
-        <AuthContext.Provider value={{isLogged,user,login}}>
+        <AuthContext.Provider value={{isLogged,user,login, logout}}>
             {props.children}
         </AuthContext.Provider>
     )

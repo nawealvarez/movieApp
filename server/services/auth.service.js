@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../database/config/index');
 const { User } = require('../database/models/user');
 const db = require('../database/models/index');
-const ServiceError = require('../util/index');
+var ServiceError = require('../util/index').ServiceError;
 const admin = require('firebase-admin');
 
 class TokenService {
@@ -53,17 +53,14 @@ class AuthService {
     }
 
     async logIn(body) {
-        const {fcmToken} = body;
         const decodedToken = await this.extractUSer(body);
-        const user = await db.User.findOne({firebaseId: decodedToken.user_id});
+        const user = await db.User.findOne({
+            where: {firebaseId: decodedToken.user_id},
+        });
         
         if (!user) {
             throw new ServiceError(400, {msg: "User Not Initialized"});
         }
-        if (user.fcmToken != fcmToken) {
-            user.fcmToken = fcmToken;
-        }
-
         return await this.tokenService.generate(user);
     }
 
@@ -86,11 +83,12 @@ class AuthService {
             where: {firebaseId: firebaseId},
         });
         if (userCheck) {
-            throw new ServiceError(400, "User already exists");
+            const error = new ServiceError(400, "User already exists");
+            console.log(400, "User already exists", error);
+            throw error;
         }
-        const fcmToken = body.fcmToken;
         const email = body.email;
-        const user = await db.User.create({'firebaseId': firebaseId, 'email': email, 'fcmToken': fcmToken});
+        const user = await db.User.create({'firebaseId': firebaseId, 'email': email});
         return user;
     }
 }

@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
   User.init({
     email: DataTypes.STRING,
     firebaseId: DataTypes.STRING,
-    fcmToken: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',
