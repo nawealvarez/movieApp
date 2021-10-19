@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
 import Home from './Home';
 import Orders from './Orders';
+import { addMovie } from '../services/Movie.service';
 import MovieDialog from './MovieDialog';
 import CreateMovie from './CreateMovie';
 
@@ -46,12 +47,25 @@ function MoviesHome (props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [disabled, setDisabled] = useState(true);
+    const [ onLoad, setOnLoad] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
     };
-    const handleCreate = () => {
-        console.log('create');
+    const handleCreate = async (payload) => {
+        try{
+            setOnLoad(true);
+            console.log(payload);
+            const res = await addMovie(payload);
+            if (res) {
+                console.log(res);
+                handleClose();
+            }
+        } catch(err) {
+            console.log(err);
+        } finally {
+            setOnLoad(false);
+        }
     }
 
 
@@ -99,15 +113,18 @@ function MoviesHome (props) {
                     </Grid>
                 </Grid>
             </div>
-            <MovieDialog
-                    open={open}
-                    onClose={handleClose}
-                    cancel={handleClose}
-                    submit={handleCreate}
-                    disabled={disabled}
-                >
-                    <CreateMovie setDisabled={setDisabled}/>
-            </MovieDialog>
+            
+            <CreateMovie 
+                setDisabled={setDisabled} 
+                open={open}
+                onClose={handleClose}
+                cancel={handleClose}
+                submit={handleCreate}
+                disabled={disabled}
+                onLoad={onLoad}
+                setOnLoad={setOnLoad}
+            />
+    
         </Home>
     );
 }

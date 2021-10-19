@@ -9,18 +9,23 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       genre_id: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       rating: {
+        allowNull: false,
         type: Sequelize.FLOAT
       },
       cast: {
+        allowNull: false,
         type: Sequelize.ARRAY(Sequelize.STRING)
       },
       releaseDate: {
+        allowNull: false,
         type: Sequelize.DATE
       },
       createdAt: {

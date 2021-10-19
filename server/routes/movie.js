@@ -20,4 +20,32 @@ movie.get('/genres', async (req, res, next) => {
     }
 });
 
+movie.get('/',  async (req, res, next) => {
+    try {
+        return res.status(201).json({
+            movies: await movieService.getMovies()
+        });
+    } catch (err) {
+        if (err instanceof ServiceError) {
+            return res.status(err.code).json(err.detail);
+        } else {
+            return next(err);
+        }
+    }
+});
+
+movie.post('/create', async (req, res, next) => {
+    try {
+        return res.status(201).json({
+            movie: await movieService.addMovie(req.body)
+        });
+    } catch (err) {
+        if (err instanceof ServiceError) {
+            return res.status(err.code).json(err.detail);
+        } else {
+            return next(err);
+        }
+    }
+})
+
 module.exports = movie;
