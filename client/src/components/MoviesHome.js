@@ -5,7 +5,6 @@ import { makeStyles } from '@mui/styles';
 import Home from './Home';
 import Orders from './Orders';
 import { addMovie } from '../services/Movie.service';
-import MovieDialog from './MovieDialog';
 import CreateMovie from './CreateMovie';
 
 const useStyles = makeStyles(theme =>
