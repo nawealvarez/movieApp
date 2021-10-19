@@ -87,6 +87,11 @@ export default function MovieTableRow(props) {
                                     <LocalizationProvider dateAdapter={AdapterDateFns} >
                                         <DatePicker
                                             readOnly
+                                            views={['year']}
+                                            format="yyyy"
+                                            onChange={() => {
+                                                console.log('props.movie.releaseDate');
+                                              }}
                                             value={props.movie.releaseDate}
                                             renderInput={(params) => <TextField {...params} className={classes.content}/>}
                                         />

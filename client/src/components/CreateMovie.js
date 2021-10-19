@@ -169,7 +169,8 @@ export default function CreateMovie(props) {
                                 <Grid item xs={12}>
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                                         <DatePicker
-                                            inputFormat="dd/MM/yyyy"
+                                            inputFormat="yyyy"
+                                            views={['year']}
                                             label="Release Date"
                                             value={date}
                                             onChange={(newValue) => {

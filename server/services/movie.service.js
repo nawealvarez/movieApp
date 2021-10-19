@@ -17,7 +17,8 @@ class MovieService {
                 include: [{
                   model: db.Genre,
                   as: 'genre'
-                }]
+                }],
+                order: [['name', 'ASC']]
             });
             return movies;
         } catch (err) {

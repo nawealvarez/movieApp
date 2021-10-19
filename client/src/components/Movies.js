@@ -1,18 +1,32 @@
 import React from 'react';
 import {Typography, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { makeStyles } from '@mui/styles';
 import MovieTableRow from './MovieTableRow';
 
+const useStyles = makeStyles(theme =>
+  ({
+      title: {
+        color: "primary",
+        fontSize: "25px",
+      },
+      text: {
+        fontSize: "20px",
+      }
+  }
+  ));
+
 export default function Movies(props) {
+  const classes = useStyles();
 
   return (
     <React.Fragment>
-      <Typography align="center">Movies</Typography>
+      <Typography className={classes.title} align="center">Movies</Typography>
       <Table size="medium">
         <TableHead>
           <TableRow>
-            <TableCell align="center">Name</TableCell>
-            <TableCell align="center">Genre</TableCell>
-            <TableCell align="center">Details</TableCell>
+            <TableCell className={classes.text} align="center">Name</TableCell>
+            <TableCell className={classes.text} align="center">Genre</TableCell>
+            <TableCell className={classes.text} align="center">Details</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
