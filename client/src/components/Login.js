@@ -70,7 +70,6 @@ export default function Login() {
           login(sign);
           history.push('/');
         }
-        console.log('Your account has been created successfully!', res);
       }
     } catch (err) {
       console.log(err);

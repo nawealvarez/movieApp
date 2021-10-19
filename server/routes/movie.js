@@ -48,4 +48,18 @@ movie.post('/create', async (req, res, next) => {
     }
 })
 
+movie.delete('/:id', async (req, res, next) => {
+    try {
+        return res.status(201).json({
+            movie: await movieService.removeMovie(req.body)
+        });
+    } catch (err) {
+        if (err instanceof ServiceError) {
+            return res.status(err.code).json(err.detail);
+        } else {
+            return next(err);
+        }
+    }
+})
+
 module.exports = movie;

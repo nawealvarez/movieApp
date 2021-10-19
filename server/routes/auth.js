@@ -10,7 +10,6 @@ const authService = new AuthService();
 auth.post('/signup', async (req, res, next) => {
     try {
         const token = await authService.signUp(req.body);
-        console.log(res, token);
         return res.status(201).json(token);
     } catch (err) {
         if (err instanceof ServiceError) {

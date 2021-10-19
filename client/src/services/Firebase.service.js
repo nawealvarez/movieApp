@@ -1,4 +1,4 @@
-import { getAuth, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 
 export const provider = new GoogleAuthProvider();

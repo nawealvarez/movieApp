@@ -10,6 +10,16 @@ export const getGenres = async () =>{
 
 };
 
+export const getMovies = async () =>{
+    try{
+        const res = await apiConfig.get('/api/movies/');
+        return res;
+    } catch(err) {
+        console.log(err);
+    }
+
+};
+
 export const addMovie = async (payload) => {
     try {
         const { data } = await apiConfig.post('/api/movies/create', {

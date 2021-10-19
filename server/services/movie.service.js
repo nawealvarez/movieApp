@@ -13,7 +13,12 @@ class MovieService {
 
     async getMovies() {
         try {
-            const movies = await db.Movie.findAll();
+            const movies = await db.Movie.findAll({
+                include: [{
+                  model: db.Genre,
+                  as: 'genre'
+                }]
+            });
             return movies;
         } catch (err) {
             throw new ServiceError(401,err);
@@ -22,7 +27,6 @@ class MovieService {
 
     async addMovie(payload) {
         try {
-            console.log(payload);
             const movie = await db.Movie.create({
                     'name': payload.name, 
                     'rating': payload.rating, 
@@ -30,6 +34,18 @@ class MovieService {
                     'releaseDate': payload.releaseDate, 
                     'genre_id': payload.genre_id});
             return movie;
+
+        } catch (err) {
+            throw new ServiceError(401,err);
+        }
+    }
+
+    async removeMovie(payload) {
+        try {
+            const movie = await db.Movie.destroy({
+                where: {id: payload.id}
+            })
+            return movie
 
         } catch (err) {
             throw new ServiceError(401,err);

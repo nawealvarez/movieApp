@@ -29,10 +29,10 @@ export default function CreateMovie(props) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [date, setDate] = useState();
-    const [name, setName] = useState();
+    const [name, setName] = useState("");
     const [genre, setGenre] = useState("");
     const [rating, setRating] = useState();
-    const [cast, setCast] = useState();
+    const [cast, setCast] = useState("");
     const [list, setList] = useState("");
     const [castList, setCastList] = useState([]);
 
@@ -41,7 +41,6 @@ export default function CreateMovie(props) {
     };
 
     const handleChangeGenre = (e) => {
-        console.log(e.target.value);
         setGenre(e.target.value);
     };
 
@@ -78,9 +77,17 @@ export default function CreateMovie(props) {
         }
     }
 
-    useEffect(() => {
-        console.log(castList);
-      }, [castList]);
+    const onSubmit = () => {
+        try{
+            props.submit({name:name, releaseDate: date, genre_id: genre, rating: rating, cast: castList});
+
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setCastList([]);
+            setGenre("");
+        }
+    }
 
     useEffect(() => {
         if (name && date && genre && rating && castList.length > 0) {
@@ -93,6 +100,7 @@ export default function CreateMovie(props) {
 
       useEffect(() => {
         handleGetGenres();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
     return(
@@ -108,9 +116,6 @@ export default function CreateMovie(props) {
                 <DialogContent>
                     <DialogContentText>
                     </DialogContentText>
-                        <Typography component="h1" variant="h5">
-                            Sign up
-                        </Typography>
                         <Box sx={{ mt: 3 }}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
@@ -137,7 +142,7 @@ export default function CreateMovie(props) {
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography className={classes.text}>Raiting</Typography>
+                                    <Typography  className={classes.text}>Raiting</Typography>
                                     <Rating name="half-rating" onChange={handleChangeRaiting} defaultValue={2.5} precision={0.5} />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -193,7 +198,7 @@ export default function CreateMovie(props) {
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={props.cancel}>Cancel</Button>
-                                <Button disabled={props.disabled} onClick={()=> props.submit({name:name, releaseDate: date, genre_id: genre, rating: rating, cast: castList})}>
+                                <Button disabled={props.disabled} onClick={onSubmit}>
                                     Create Movie
                                 </Button>
                             </DialogActions>

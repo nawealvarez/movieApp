@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {Typography, Grid, Button} from "@mui/material";
 import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
 import Home from './Home';
-import Orders from './Orders';
-import { addMovie } from '../services/Movie.service';
+import Movies from './Movies';
+import { addMovie, getMovies } from '../services/Movie.service';
 import CreateMovie from './CreateMovie';
 
 const useStyles = makeStyles(theme =>
@@ -45,6 +45,7 @@ const useStyles = makeStyles(theme =>
 function MoviesHome (props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
+    const [movies, setMovies] = useState([]);
     const [disabled, setDisabled] = useState(true);
     const [ onLoad, setOnLoad] = useState(false);
 
@@ -54,10 +55,9 @@ function MoviesHome (props) {
     const handleCreate = async (payload) => {
         try{
             setOnLoad(true);
-            console.log(payload);
             const res = await addMovie(payload);
             if (res) {
-                console.log(res);
+                handleGetMovies();
                 handleClose();
             }
         } catch(err) {
@@ -65,7 +65,20 @@ function MoviesHome (props) {
         } finally {
             setOnLoad(false);
         }
-    }
+    };
+
+    const handleGetMovies = async () => {
+        try{
+            const res = await getMovies();
+            setMovies(res.data.movies);
+        } catch(err) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {
+        handleGetMovies();
+    },[])
 
 
     const handleClose = () => {
@@ -106,7 +119,7 @@ function MoviesHome (props) {
                         </Grid>
                         <Grid item xs={12}>
                             <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                                <Orders />
+                                <Movies movies={movies}/>
                             </Paper>
                         </Grid>
                     </Grid>
