@@ -10,7 +10,7 @@ function App() {
     <AuthContextWrapper >
       <ThemeProvider theme={theme}>
         <Main />
-        </ThemeProvider>
+      </ThemeProvider>
     </AuthContextWrapper>
   );
 }

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import {Typography, Grid, Button} from "@mui/material";
 import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
 import Home from './Home';
 import Orders from './Orders';
+import MovieDialog from './MovieDialog';
+import CreateMovie from './CreateMovie';
 
 const useStyles = makeStyles(theme =>
 ({
@@ -40,8 +42,22 @@ const useStyles = makeStyles(theme =>
 }));
 
 
-function MoviesHome () {
+function MoviesHome (props) {
     const classes = useStyles();
+    const [open, setOpen] = useState(false);
+    const [disabled, setDisabled] = useState(true);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleCreate = () => {
+        console.log('create');
+    }
+
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     return (
         <Home>
             <div className={classes.root}>
@@ -67,6 +83,7 @@ function MoviesHome () {
                                     <Button
                                     variant="contained"
                                     color="secondary"
+                                    onClick={handleClickOpen}
                                     className={classes.outlinedButtom}
                                     >
                                     Add New Movie
@@ -82,6 +99,15 @@ function MoviesHome () {
                     </Grid>
                 </Grid>
             </div>
+            <MovieDialog
+                    open={open}
+                    onClose={handleClose}
+                    cancel={handleClose}
+                    submit={handleCreate}
+                    disabled={disabled}
+                >
+                    <CreateMovie setDisabled={setDisabled}/>
+            </MovieDialog>
         </Home>
     );
 }

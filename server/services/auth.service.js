@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const config = require('../database/config/index');
-const { User } = require('../database/models/user');
 const db = require('../database/models/index');
 var ServiceError = require('../util/index').ServiceError;
 const admin = require('firebase-admin');

@@ -13,7 +13,7 @@ module.exports = {
             secretOrKey: config.jwtSecret,
         }, async (jwtPayload, done) => {
             try {
-                const user = await db.User.findOne({where: { id: jwtPayload.id }});
+                const user = await db.User.findOne({where: { id: jwtPayload.sub }});
                 return done(null, user);
             } catch (err) {
                 return done(err);

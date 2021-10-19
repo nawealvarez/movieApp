@@ -7,7 +7,6 @@ import { auth } from '../config/utils';
 import { useAuth } from '../context/AuthContext';
 import { makeStyles } from '@mui/styles';
 
-
 const useStyles = makeStyles((theme) =>
 ({
     root: {
