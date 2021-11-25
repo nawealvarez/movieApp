@@ -128,7 +128,7 @@ function Home(props) {
             <AppBar>
                 <Toolbar className={classes.toolbar}>
                     <Typography component="div" variant="h5" color="inherit" noWrap className={classes.title}>
-                        Admios Movie App
+                        Dockerized Movie App
                     </Typography>
                 
                 <Box>
